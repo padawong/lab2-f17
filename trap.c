@@ -78,6 +78,15 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
 
+  //Lab 3 - Adding case for page fault
+  case T_PGFLT:
+      if(rcr2() < STACKTOP){
+        allocuvm(myproc()->pgdir, STACKTOP - ((myproc()->numOfPages+1)*PGSIZE),STACKTOP - (myproc()->numOfPages * PGSIZE));
+        myproc()->numOfPages++;
+        break;
+      }
+
+
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
